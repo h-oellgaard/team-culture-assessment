@@ -1,7 +1,7 @@
   <template>
     <div id="app">
       <img src="./assets/logo.svg" alt="Logo" style="width:  300px; margin-bottom: 20px;" />
-      <h1>Team Culture Assessment</h1>
+      <h1>Study Group Culture Assessment</h1>
       <Questions @update-questions="updateQuestions" />
       <button @click="calculateResults">Submit</button>
       <ScoreDisplay v-if="results" :results="results" />

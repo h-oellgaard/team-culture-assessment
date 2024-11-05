@@ -34,7 +34,7 @@
       chartInstance = new Chart(ctx, {
         type: 'bar',
         data: {
-          labels: Object.keys(props.results),
+            labels: ['Fiery Red', 'Sunshine Yellow', 'Earth Green', 'Cool Blue'],
           datasets: [{
             label: 'Team Culture Scores',
             data: Object.values(props.results),

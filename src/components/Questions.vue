@@ -3,9 +3,18 @@
     <div v-for="(questionSet, index) in questions" :key="index">
       <h2>{{ questionSet.title }}</h2>
       <div v-for="(question, qIndex) in questionSet.questions" :key="qIndex">
-        <label >
-          <input type="checkbox" v-model="questionSet.answers[qIndex]" @change="emitQuestions" />
+        <label class="question-label">
           {{ question }}
+          <div>
+            <label>
+              <input type="radio" :name="'question-' + index + '-' + qIndex" v-model="questionSet.answers[qIndex]" :value="true" @change="emitQuestions" />
+              Yes
+            </label>
+            <label>
+              <input type="radio" :name="'question-' + index + '-' + qIndex" v-model="questionSet.answers[qIndex]" :value="false" @change="emitQuestions" />
+              No
+            </label>
+          </div>
         </label>
       </div>
     </div>
@@ -20,68 +29,68 @@ const emit = defineEmits(['update-questions']);
 
 const questions = ref([
   {
-    title: "Fiery Red",
+    title: "Study Group Goal Setting",
     questions: [
-      "There are often challenging and frank exchanges of views",
-      "Decisions are communicated through directives, orders and instructions from the team leader(s)",
-      "Success is defined by market leadership, winning and outpacing the competition",
-      "The team values competitive actions and achievement",
-      "If systems or rules get in the way, team members tend to ignore or by-pass them to accomplish their tasks or perform their function better",
-      "The team constantly strives to achieve the long term vision with milestones to prove progress",
-      "The leadership style in the team tends towards achievement, high demands and hard-driving competitiveness",
-      "Successful team players are results focused, with a strong commitment to getting the job done",
-      "The team is results oriented and competitive",
-      "The team thrives on goal accomplishment – being aggressive and winning are common themes",
+      "Do we often engage in challenging and open discussions to understand difficult concepts?",
+      "Are decisions in the group made clearly by a designated leader or agreed upon by everyone?",
+      "Is our study group's success measured by how well we achieve our learning goals together?",
+      "Do we value active participation and contributions from all members?",
+      "If we face obstacles, do group members adapt or find alternative ways to continue?",
+      "Do we strive to achieve our long-term study goals with clear milestones for progress?",
+      "Does our study group encourage an environment of high expectations and motivation to achieve academic goals?",
+      "Are successful group members results-oriented and committed to completing study tasks on time?",
+      "Is our group focused on achieving learning goals effectively and supporting each other?",
+      "Does the group thrive on achieving study targets and celebrating small wins?"
     ],
-    answers: Array(10).fill(false),
+    answers: Array(10).fill(null),
   },
   {
-    title: "Sunshine Yellow",
+    title: "Creative Collaboration",
     questions: [
-      "Agreement is reached through open dialogue and a search for creative solutions",
-      "Decisions are made close to the point of action by people on the spot",
-      "The success of the team relies on people being proactive and innovative",
-      "Team members are encouraged to try new things and create new opportunities",
-      "If team members come up against blocks, they use their influencing skills to try to change them",
-      "It is important to the team that the vision inspires, creating excitement and motivation",
-      "The team leaders value individual risk-taking, innovation, freedom and uniqueness",
-      "People who are successful in the team are highly visible and effusive with a sociable manner",
-      "The team is dynamic – people are willing to stick their necks out and take risks",
-      "The team emphasises commitment to innovation and development",
+      "Do we reach agreement through open dialogue and creative problem solving?",
+      "Are decisions made collectively, with everyone encouraged to contribute?",
+      "Is the success of the study group dependent on proactive and innovative approaches?",
+      "Are group members encouraged to try new study techniques and methods?",
+      "When facing challenges, do members use their creativity and influence to overcome them?",
+      "Is it important that our study sessions are inspiring and motivating for all members?",
+      "Does the group value individuality, risk-taking, and unique contributions?",
+      "Are successful group members visible, engaging, and sociable with their peers?",
+      "Is our study group dynamic, with members willing to take risks to explore new concepts?",
+      "Do we emphasize innovation and personal development within our group?"
     ],
-    answers: Array(10).fill(false),
+    answers: Array(10).fill(null),
   },
   {
-    title: "Earth Green",
+    title: "Supportive Environment",
     questions: [
-      "Success is achieved by everyone working hard together to achieve 'win-win' solutions",
-      "Decisions are made by consensus to ensure acceptance and support for the decision",
-      "Success is measured by employee commitment and teamwork",
-      "The team emphasises openness and participation – high trust persists",
-      "In difficult situations team members offer each other personal support",
-      "The team has a shared vision they are all working to attain",
-      "Team leaders focus on teamwork, consensus and participation",
-      "Team members build close working relationships with others by being cooperative, responsive, and caring",
-      "The atmosphere in the team is personal – people share a lot of themselves and it is like an extended family",
-      "Loyalty and mutual trust bonds the team together – commitment to the team and to individual members runs high",
+      "Is success achieved by everyone working together to reach shared learning outcomes?",
+      "Are decisions made by consensus to ensure everyone's acceptance and support?",
+      "Is our group's success measured by how committed and engaged everyone feels?",
+      "Do we emphasize openness and participation, fostering trust among group members?",
+      "In difficult situations, do we offer each other personal support and encouragement?",
+      "Do we have a shared vision of our learning goals that we all work towards?",
+      "Does our group focus on teamwork, consensus, and mutual support?",
+      "Do members build strong relationships by being cooperative, responsive, and supportive?",
+      "Is the atmosphere in our study group personal, where people feel comfortable sharing their thoughts?",
+      "Do loyalty and trust bond us together, creating a high level of commitment to the group?"
     ],
-    answers: Array(10).fill(false),
+    answers: Array(10).fill(null),
   },
   {
-    title: "Cool Blue",
+    title: "Structured Learning",
     questions: [
-      "Agreement is reached by debate and review of operating guidelines, procedures, or key business objectives",
-      "Decisions are made through application of principles and adherence to formal channels of responsibility",
-      "Success is measured by dependable delivery and efficient operations",
-      "The team values consistency and attention to detail",
-      "The team generally abides by the rules or goes through proper channels to get permission to deviate from them",
-      "Roles and responsibilities are clearly aligned to the vision",
-      "The team leadership emphasises conformity, predictability and stability in relationships",
-      "The most effective team members are knowledgeable, work within the system and strive to do things correctly",
-      "The team environment is structured – formal procedures generally govern what people do",
-      "The team focuses on process, systems and guidelines – smooth running operations are important",
+      "Do we reach agreement by reviewing key guidelines, processes, or study objectives?",
+      "Are decisions made based on established principles and clear responsibilities?",
+      "Is success measured by how well we deliver results and complete tasks efficiently?",
+      "Do we value consistency and attention to detail in our study sessions?",
+      "Do we follow agreed rules or processes when studying, and seek permission if deviating?",
+      "Are roles and responsibilities clearly aligned to our group's learning objectives?",
+      "Does our group emphasize predictability and stability in how we study together?",
+      "Are the most effective group members knowledgeable, organized, and committed to accuracy?",
+      "Is our study environment structured, with clear guidelines for how we proceed?",
+      "Does the group focus on effective processes and guidelines to ensure smooth study sessions?"
     ],
-    answers: Array(10).fill(false),
+    answers: Array(10).fill(null),
   },
 ]);
 
@@ -90,6 +99,7 @@ const emitQuestions = () => {
   emit('update-questions', questions.value);
 };
 </script>
+
 <style scoped>
 .questions {
   margin-top: 20px;
@@ -120,7 +130,7 @@ h2 {
   background-color: #e0eaff;
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
 }
-input[type="checkbox"] {
+input[type="radio"] {
   margin-right: 10px;
 }
 </style>
