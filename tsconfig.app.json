@@ -9,11 +9,16 @@
 
     /* Bundler mode */
     "moduleResolution": "Bundler",
-    "allowImportingTsExtensions": true,
     "isolatedModules": true,
     "moduleDetection": "force",
-    "noEmit": true,
     "jsx": "preserve",
+
+    /* Composite Configuration */
+    "composite": true,
+
+    /* Emit Configuration */
+    "declaration": true,          // Sørg for at deklarationsfiler bliver genereret
+    "declarationDir": "./types",  // Gem `.d.ts`-filer i en separat mappe
 
     /* Linting */
     "strict": true,
