@@ -1,56 +1,53 @@
-// src/services/group_service.js
+import { db } from './firebase';
+import { collection, addDoc, getDocs, query, where } from "firebase/firestore";
 
-// Mock database til at gemme grupper i hukommelsen
-let groups = [];
-
-/**
- * Tilføj en ny gruppe.
- * @param {string} name - Gruppens navn.
- * @param {string} [password] - Kodeord (valgfrit).
- * @returns {object} Den oprettede gruppe.
- */
-export function addGroup(name, password = null) {
-  if (groups.some(group => group.name === name)) {
-    throw new Error('A group with this name already exists.');
-  }
-
-  const newGroup = {
-    name,
-    password,
-    id: Math.random().toString(36).substr(2, 9)
-  };
+// Function to create a group
+export const addGroup = async (groupName, password) => {
+    // Step 1: Check if the group already exists
+    const groupQuery = query(collection(db, "groups"), where("name", "==", groupName));
+    const querySnapshot = await getDocs(groupQuery);
   
-  groups.push(newGroup);
-  return newGroup;
-}
+    if (!querySnapshot.empty) {
+        alert("A group with this name already exists. Please choose a different name.");
+      throw new Error("A group with this name already exists. Please choose a different name.");
+    }
+  
+    // Step 2: Create a new group if it doesn't already exist
+    try {
+      const docRef = await addDoc(collection(db, "groups"), {
+        name: groupName,
+        password: password, // Consider hashing for security
+      });
+      return { id: docRef.id, name: groupName };
+    } catch (error) {
+      console.error("Error adding group: ", error);
+      throw new Error("Could not create group due to an internal error.");
+    }
+  };
 
-/**
- * Hent en gruppe baseret på navn.
- * @param {string} name - Gruppens navn.
- * @returns {object|null} Returnerer gruppen eller null, hvis den ikke findes.
- */
-export function getGroup(name) {
-  return groups.find(group => group.name === name) || null;
-}
-
-/**
- * Valider en gruppe baseret på navn og kodeord.
- * @param {string} name - Gruppens navn.
- * @param {string} [password] - Kodeordet (valgfrit).
- * @returns {boolean} Returnerer true, hvis gruppen findes og kodeordet er korrekt.
- */
-export function validateGroup(name, password) {
-  const group = getGroup(name);
-  if (!group) {
-    return false;
-  }
-  return group.password === null || group.password === password;
-}
-
-/**
- * Hent alle grupper.
- * @returns {array} Returnerer en liste over alle grupper.
- */
-export function getAllGroups() {
+// Function to get all groups
+export const getAllGroups = async () => {
+  const groups = [];
+  const querySnapshot = await getDocs(collection(db, "groups"));
+  querySnapshot.forEach((doc) => {
+    groups.push({ id: doc.id, ...doc.data() });
+  });
   return groups;
-}
+};
+
+// Function to validate group (match name and password)
+export const validateGroup = async (groupName, password) => {
+  const q = query(collection(db, "groups"), where("name", "==", groupName), where("password", "==", password));
+  const querySnapshot = await getDocs(q);
+  return !querySnapshot.empty; // Returns true if group exists and password matches
+};
+
+export const getGroup = async (groupName) => {
+    const q = query(collection(db, "groups"), where("name", "==", groupName));
+    const querySnapshot = await getDocs(q);
+    const groups = [];
+    querySnapshot.forEach((doc) => {
+      groups.push({ id: doc.id, ...doc.data() });
+    });
+    return groups.length > 0 ? groups[0] : null; // Return the first match or null if none found
+  };
