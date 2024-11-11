@@ -16,15 +16,16 @@ import ScoreDisplay from './components/ScoreDisplay.vue';
 import GroupJoins from './components/GroupJoins.vue';
 import SelectedGroup from './components/SelectedGroup.vue';
 import calculateScores from './services/calculate_scores.service.js'; // Denne import er nu opdateret og korrekt
-
+import { saveResultsToFirebase } from './services/firebase.js'; // Denne import er nu opdateret og korrekt
 // Reaktive variabler til at gemme spørgsmål, resultater og gruppeinfo
 const questions = ref([]);
 const results = ref(null);
 const currentGroup = ref(null);
-
+const groupId = ref(null);
 // Funktion til at beregne scoren
 const calculateResults = () => {
   results.value = calculateScores(questions.value);
+  saveResultsToFirebase(currentGroup.value ? currentGroup.value.id : null, results.value);
 };
 
 // Funktion til at opdatere spørgsmål fra Questions.vue
@@ -35,7 +36,9 @@ const updateQuestions = (newQuestions) => {
 // Funktion til at håndtere valg af gruppe
 const groupSelected = (group) => {
   currentGroup.value = group;
-  results.value = null; // Nulstil resultater, når en ny gruppe vælges
+  groupId.value = group.id; // Store the group's ID
+  results.value = null; // Reset results when a new group is selected
+  
 };
 </script>
 

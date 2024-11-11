@@ -42,23 +42,29 @@
       const groups = ref([]);
       const selectedGroupName = ref('');
   
-      // Load all existing groups when the component is mounted
-      onMounted(() => {
-        groups.value = getAllGroups();
+      // Load all existing groups from Firebase when the component is mounted
+      onMounted(async () => {
+        try {
+          groups.value = await getAllGroups(); // Fetch groups from Firebase
+        } catch (err) {
+          error.value = 'Failed to load groups';
+        }
       });
   
       // Function to handle group creation or joining
-      const createOrJoinGroup = () => {
-        if (groupName.value === '' && selectedGroupName.value === '') {
-          error.value = 'Group name is required';
+      const createOrJoinGroup = async () => {
+        if (!selectedGroupName.value && !groupName.value) {
+          error.value = 'Please select or enter a group name';
           return;
         }
+  
         try {
           let group;
-          if (selectedGroupName.value !== '') {
+          if (selectedGroupName.value) {
             // Join the selected existing group
-            group = getGroup(selectedGroupName.value);
-            if (validateGroup(selectedGroupName.value, password.value)) {
+            group = await getGroup(selectedGroupName.value);
+            const isValid = await validateGroup(selectedGroupName.value, password.value);
+            if (isValid) {
               emit('group-selected', group);
               error.value = null;
             } else {
@@ -66,10 +72,10 @@
             }
           } else {
             // Create a new group
-            group = addGroup(groupName.value, password.value);
+            group = await addGroup(groupName.value, password.value);
             emit('group-selected', group);
             error.value = null;
-            groups.value = getAllGroups(); // Update the list of groups
+            groups.value = await getAllGroups(); // Refresh the list of groups
           }
         } catch (err) {
           error.value = err.message;
@@ -78,7 +84,8 @@
   
       // Function to handle changes in group selection dropdown
       const handleGroupSelection = () => {
-        groupName.value = selectedGroupName.value; // Update groupName based on dropdown selection
+        groupName.value = ''; // Clear groupName input if a group is selected
+        error.value = null; // Clear any previous errors
       };
   
       return {
